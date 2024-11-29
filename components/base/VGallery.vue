@@ -115,10 +115,6 @@
       <div
         class="relative flex flex-col items-center justify-center w-full h-full max-w-7xl"
       >
-        <div
-          v-auto-animate
-          class="absolute z-50 hidden gap-2 text-white bg-opacity-75 item-center md:flex top-4 left-4"
-        ></div>
         <!-- Close Button -->
         <UButton
           class="absolute z-50 top-4 right-4 rounded-md"

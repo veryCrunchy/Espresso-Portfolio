@@ -5,17 +5,19 @@
     data: BlockGallery;
   }>();
 
-  const getFileId = (id: string) => {
-    return useFile(id) ?? id; // Only recompute the id if necessary
-  };
-
   const images = computed(() => {
-    return props.data.images
+    const mappedImages = props.data.images
       ?.map((item: BlockGalleryFile) => {
         const file = item.directus_files_id as File;
         if (file) return { ...file, id: useFile(file.id) ?? file.id };
       })
       .filter((i) => i !== undefined);
+
+    if (props.data.random_order && mappedImages) {
+      return mappedImages.sort(() => Math.random() - 0.5);
+    }
+
+    return mappedImages;
   });
 </script>
 
