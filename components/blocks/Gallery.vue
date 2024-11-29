@@ -15,7 +15,6 @@
 </script>
 
 <template>
-  {{ data }}
   <BlockContainer>
     <TypographyTitle v-if="data.title">{{ data.title }}</TypographyTitle>
     <TypographyHeadline
