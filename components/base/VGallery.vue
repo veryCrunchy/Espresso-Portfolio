@@ -189,7 +189,7 @@
                 v-show="currentItemIdx === itemIdx"
                 :src="item.id"
                 :alt="item.description ?? ''"
-                class="object-contain w-full rounded-card"
+                class="object-contain w-full h-full rounded-card"
               />
             </template>
           </div>

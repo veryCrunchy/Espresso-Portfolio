@@ -19,5 +19,5 @@ export default defineNuxtConfig({
     '~/components',
   ],
 
-  modules: ["@unocss/nuxt", "@nuxt/image"],
+  modules: ["@unocss/nuxt", "@nuxt/image", "@nuxt/ui"],
 });

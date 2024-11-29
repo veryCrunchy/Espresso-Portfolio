@@ -38,6 +38,5 @@
 </script>
 <template>
   <PageBuilder :page="page" />
-  <div>{{ page.blocks }}</div>
 </template>
 <style></style>
