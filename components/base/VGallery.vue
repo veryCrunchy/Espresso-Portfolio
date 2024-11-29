@@ -8,8 +8,6 @@
 
   const props = defineProps<GalleryProps>();
 
-  const { fileUrl } = useFiles();
-
   const isOpen = ref(false);
   const currentItemIdx = ref(0);
 

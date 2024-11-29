@@ -26,13 +26,13 @@
       />
       <BlocksButtonGroup
         v-if="data.buttons"
-        :data="data.buttons as BlockButtonGroup"
+        :data="(data.buttons as BlockButtonGroup)"
       />
     </div>
     <!-- Image -->
     <div
       v-if="data.image"
-      class="overflow-hidden border lg:relative lg:h-full dark:border-gray-700 rounded-card"
+      class="overflow-hidden border lg:relative lg:h-full dark:border-gray-700 rounded-2xl"
       :class="
         data.image_position === 'left'
           ? 'order-first lg:-ml-48 md:-ml-16'
@@ -40,9 +40,8 @@
       "
     >
       <NuxtImg
-        v-if="data.image"
-        class="w-full overflow-hidden dark:brightness-90 max-h-[700px] h-full object-cover rounded-card"
-        :src="data.image as string"
+        class="w-full overflow-hidden dark:brightness-90 max-h-[700px] h-full object-cover"
+        :src="useFile(data.image as string)"
         alt=""
       />
     </div>

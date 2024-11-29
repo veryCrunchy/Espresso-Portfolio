@@ -11,7 +11,7 @@
       ?.map((item: BlockGalleryFile) => {
         const file = item.directus_files_id as File;
         if (!file) return;
-        file.id = useFiles().fileUrl(file.id) ?? file.id;
+        file.id = useFile(file.id) ?? file.id;
         return file;
       })
       .filter((i) => i !== undefined);
