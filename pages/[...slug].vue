@@ -61,10 +61,8 @@
       },
     }
   );
-  const e = unref(error);
 </script>
 <template>
-  {{ page }}
   <PageBuilder v-if="page" :page="page" />
-  {{ e?.toJSON() }}
+  {{ error?.toJSON() }}
 </template>
