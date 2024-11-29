@@ -8,5 +8,16 @@ export default defineNuxtConfig({
     "@unocss/reset/sanitize/assets.css",
     "@unocss/reset/eric-meyer.css",
   ],
-  modules: ["@unocss/nuxt"],
+  runtimeConfig: {
+    public: {
+      directusUrl: '',
+    }
+  },
+
+  components: [
+    { path: '~/components/base', pathPrefix: false },
+    '~/components',
+  ],
+
+  modules: ["@unocss/nuxt", "@nuxt/image"],
 });
