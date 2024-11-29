@@ -25,8 +25,8 @@
         class="py-6 font-display"
       />
       <BlocksButtonGroup
-        v-if="data.button_group"
-        :data="data.button_group as BlockButtonGroup"
+        v-if="data.buttons"
+        :data="data.buttons as BlockButtonGroup"
       />
     </div>
     <!-- Image -->

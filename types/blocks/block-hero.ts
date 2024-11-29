@@ -8,5 +8,5 @@ export interface BlockHero {
     content?: string | null;
     image?: (string | File) | null;
     image_position?: 'left' | 'right' | null;
-    button_group?: (string | BlockButtonGroup) | null;
+    buttons?: (string | BlockButtonGroup) | null;
 }

@@ -10,14 +10,19 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     public: {
-      directusUrl: '',
-    }
+      directusUrl: "",
+    },
   },
 
   components: [
-    { path: '~/components/base', pathPrefix: false },
-    '~/components',
+    { path: "~/components/base", pathPrefix: false },
+    "~/components",
   ],
 
-  modules: ["@unocss/nuxt", "@nuxt/image", "@nuxt/ui"],
+  modules: [
+    "@unocss/nuxt",
+    "@nuxt/image",
+    "@nuxt/ui",
+    "@nuxt/fonts",
+  ],
 });

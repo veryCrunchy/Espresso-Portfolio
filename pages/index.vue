@@ -39,4 +39,3 @@
 <template>
   <PageBuilder :page="page" />
 </template>
-<style></style>
