@@ -73,7 +73,7 @@
       v-for="(item, itemIdx) in items"
       :key="item.id"
       :class="[
-        'block relative w-full mb-6 overflow-hidden border dark:border-gray-700 rounded-card focus:outline-none',
+        'block relative w-full mb-6 overflow-hidden border rounded-md dark:border-gray-700 rounded-card focus:outline-none',
       ]"
       @click="
         () => {
@@ -82,11 +82,11 @@
         }
       "
     >
-      <div class="relative block w-full overflow-hidden rounded-card group">
+      <div class="relative block w-full overflow-hidden group">
         <NuxtImg
           :src="item.id"
           :alt="item.description ?? ''"
-          class="object-cover w-full transition duration-300 group-hover:scale-110"
+          class="object-cover w-full transition duration-300 group-hover:scale-110 group-hover:rotate-1"
         />
         <div
           class="absolute inset-0 flex items-center justify-center transition-opacity duration-300 bg-white bg-opacity-75 opacity-0 hover:opacity-100 dark:bg-gray-900 dark:bg-opacity-75"
@@ -115,44 +115,13 @@
       <div
         class="relative flex flex-col items-center justify-center w-full h-full max-w-7xl"
       >
-        <!-- Help Button -->
         <div
           v-auto-animate
           class="absolute z-50 hidden gap-2 text-white bg-opacity-75 item-center md:flex top-4 left-4"
-        >
-          <div>
-            <UButton
-              :icon="
-                isHelpOpen
-                  ? 'material-symbols:hide'
-                  : 'material-symbols:help-outline-rounded'
-              "
-              size="xl"
-              @click="toggleHelp"
-            />
-          </div>
-
-          <div
-            v-if="isHelpOpen"
-            class="flex items-center px-3 py-1 text-xs bg-gray-900 backdrop-blur-sm rounded-button gap-x-4"
-          >
-            <p>
-              Press
-              <UKbd value="esc" />
-              to close
-            </p>
-            <p>
-              Press
-              <UKbd value="←" />
-              or
-              <UKbd value="→" />
-              to navigate
-            </p>
-          </div>
-        </div>
+        ></div>
         <!-- Close Button -->
         <UButton
-          class="absolute z-50 top-4 right-4"
+          class="absolute z-50 top-4 right-4 rounded-md"
           icon="material-symbols:close-rounded"
           size="xl"
           @click="toggle"
@@ -160,13 +129,13 @@
         <div class="flex items-center justify-center w-full h-full">
           <!-- Nav Buttons -->
           <UButton
-            class="absolute z-50 left-4"
+            class="absolute z-50 left-4 rounded-md"
             icon="material-symbols:arrow-back-rounded"
             size="xl"
             @click="prev"
           />
           <UButton
-            class="absolute z-50 right-4"
+            class="absolute z-50 right-4 rounded-md"
             icon="material-symbols:arrow-forward-rounded"
             size="xl"
             @click="next"
