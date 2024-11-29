@@ -1,18 +1,19 @@
 <script setup lang="ts">
-  import { image } from "motion/react-client";
   import type { BlockGallery, BlockGalleryFile, File } from "~/types";
 
   const props = defineProps<{
     data: BlockGallery;
   }>();
 
+  const getFileId = (id: string) => {
+    return useFile(id) ?? id; // Only recompute the id if necessary
+  };
+
   const images = computed(() => {
     return props.data.images
       ?.map((item: BlockGalleryFile) => {
         const file = item.directus_files_id as File;
-        if (!file) return;
-        file.id = useFile(file.id) ?? file.id;
-        return file;
+        if (file) return { ...file, id: useFile(file.id) ?? file.id };
       })
       .filter((i) => i !== undefined);
   });
@@ -26,8 +27,6 @@
       :content="data.headline"
       size="lg"
     />
-    <ClientOnly>
-      <VGallery v-if="images && images.length > 0" :items="images" />
-    </ClientOnly>
+    <VGallery v-if="images && images.length > 0" :items="images" />
   </BlockContainer>
 </template>
