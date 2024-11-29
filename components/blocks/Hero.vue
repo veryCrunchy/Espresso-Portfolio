@@ -8,22 +8,27 @@
 <template>
   <BlockContainer class="relative grid gap-12 md:grid-cols-3">
     <!-- Content -->
-    <div class="md:pt-12 md:col-span-2">
-      <TypographyTitle v-if="data.title">
-        {{ data.title }}
-      </TypographyTitle>
-      <TypographyHeadline
-        v-if="data.headline"
-        :content="data.headline"
-        size="title"
-        as="h1"
-      />
-      <TypographyProse
-        v-if="data.content"
-        :content="data.content"
-        size="lg"
-        class="py-6 font-display"
-      />
+    <div class="md:pt-12 md:col-span-2 w-max">
+      <span
+        class="text-left"
+        :class="{
+          'text-right': ($props.data.text_alignment = 'right'),
+        }"
+      >
+        <TypographyTitle v-if="data.title">
+          {{ data.title }}
+        </TypographyTitle>
+        <TypographyHeadline
+          v-if="data.headline"
+          :content="data.headline"
+          size="title"
+          as="h1" />
+        <TypographyProse
+          v-if="data.content"
+          :content="data.content"
+          size="lg"
+          class="py-6 font-display"
+      /></span>
       <BlocksButtonGroup
         v-if="data.buttons"
         :data="data.buttons as BlockButtonGroup"

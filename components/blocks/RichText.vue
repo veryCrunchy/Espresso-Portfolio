@@ -20,6 +20,7 @@ withDefaults(
 				{
 					'text-left': data.alignment === 'left',
 					'text-center': data.alignment === 'center',
+					'text-right': data.alignment === 'right',
 				},
 			]"
 		>
