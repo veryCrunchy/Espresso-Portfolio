@@ -1,9 +1,19 @@
 <script setup lang="ts">
-  import type { BlockHero, BlockButtonGroup } from "~/types";
+  import type { BlockHero, BlockButtonGroup, File } from "~/types";
 
-  defineProps<{
+  const props = defineProps<{
     data: BlockHero;
   }>();
+  const img = props.data.image as File;
+  const imagePosition = computed(() => {
+    if (img.focal_point_x && img.focal_point_y && img.width && img.height) {
+      return {
+        "object-position": `${(img.focal_point_x / img.width) * 100}% ${
+          (img.focal_point_y / img.height) * 100
+        }%`,
+      };
+    }
+  });
 </script>
 <template>
   <BlockContainer class="relative grid gap-12 md:grid-cols-3">
@@ -41,10 +51,13 @@
       :class="{ 'order-first': data.image_position === 'left' }"
     >
       <NuxtImg
+        :style="imagePosition"
+        :width="img.width!"
+        :height="img.width!"
         v-if="data.image"
         class="w-full dark:brightness-90 h-full min-w-full object-cover rounded-2xl"
         :src="useFile(data.image as string)"
-        alt=""
+        alt="Hero Image"
       />
     </div>
   </BlockContainer>
