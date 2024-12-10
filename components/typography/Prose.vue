@@ -49,13 +49,14 @@
 <template>
   <div
     ref="contentEl"
+    class="w-full"
     :class="[
       {
-        'prose-sm': size === 'sm',
-        'md:prose-base lg:prose-lg': size === 'md',
-        'prose-lg lg:prose-xl': size === 'lg',
+        'text-sm': size === 'sm',
+        'md:text-base lg:text-lg': size === 'md',
+        'text-lg sm:text-xl': size === 'lg',
       },
-      'prose dark:prose-invert prose-img:rounded-lg prose-img:rounded-lg prose-img:border-2 prose-img:border-gray-500 prose-headings:font-display prose-headings:font-semibold',
+      'prose prose-accent text-primary',
     ]"
     v-html="content"
   />

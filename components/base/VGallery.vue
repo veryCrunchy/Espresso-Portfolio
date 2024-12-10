@@ -73,7 +73,7 @@
       v-for="(item, itemIdx) in items"
       :key="item.id"
       :class="[
-        'block relative w-full mb-6 overflow-hidden border rounded-md dark:border-gray-700 rounded-card focus:outline-none',
+        'block relative w-full mb-6 overflow-hidden border rounded-md border-secondary rounded-lg focus:outline-none',
       ]"
       @click="
         () => {
@@ -89,9 +89,9 @@
           class="object-cover w-full transition duration-300 group-hover:scale-110 group-hover:rotate-1"
         />
         <div
-          class="absolute inset-0 flex items-center justify-center transition-opacity duration-300 bg-white bg-opacity-75 opacity-0 hover:opacity-100 dark:bg-gray-900 dark:bg-opacity-75"
+          class="absolute inset-0 flex items-center justify-center transition-opacity duration-300 bg-opacity-75 opacity-0 hover:opacity-100 bg-gray-900 dark:bg-opacity-75"
         >
-          <UIcon
+          <Icon
             name="material-symbols:zoom-in-rounded"
             class="w-12 h-12 text-primary"
           />
@@ -116,26 +116,40 @@
         class="relative flex flex-col items-center justify-center w-full h-full max-w-7xl"
       >
         <!-- Close Button -->
-        <UButton
-          class="absolute z-50 top-4 right-4 rounded-md"
-          icon="material-symbols:close-rounded"
+
+        <Button
+          class="absolute z-50 size-12 top-4 right-4 rounded-md"
           size="xl"
           @click="toggle"
-        />
+        >
+          <Icon
+            name="material-symbols:close-rounded"
+            class="size-8 color-background"
+          />
+        </Button>
         <div class="flex items-center justify-center w-full h-full">
           <!-- Nav Buttons -->
-          <UButton
-            class="absolute z-50 left-4 rounded-md"
-            icon="material-symbols:arrow-back-rounded"
+
+          <Button
+            class="absolute z-50 size-12 left-4 rounded-md"
             size="xl"
             @click="prev"
-          />
-          <UButton
-            class="absolute z-50 right-4 rounded-md"
-            icon="material-symbols:arrow-forward-rounded"
+          >
+            <Icon
+              name="material-symbols:arrow-back-rounded"
+              class="size-8 color-background "
+            />
+          </Button>
+          <Button
+            class="absolute z-50 size-12 right-4 rounded-md"
             size="xl"
             @click="next"
-          />
+          >
+            <Icon
+              name="material-symbols:arrow-forward-rounded"
+              class="size-8 color-background"
+            />
+          </Button>
           <!-- Image -->
           <div
             class="relative flex flex-col items-center justify-center w-full h-full p-20 mx-auto"

@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     "@unocss/reset/sanitize/sanitize.css",
     "@unocss/reset/sanitize/assets.css",
     "@unocss/reset/eric-meyer.css",
+    "@unocss/reset/tailwind.css",
   ],
   runtimeConfig: {
     public: {
@@ -22,7 +23,8 @@ export default defineNuxtConfig({
   modules: [
     "@unocss/nuxt",
     "@nuxt/image",
-    "@nuxt/ui",
     "@nuxt/fonts",
+    "@nuxt/icon",
+    // "@nuxt/ui",
   ],
 });

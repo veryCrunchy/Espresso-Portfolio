@@ -32,7 +32,12 @@
                 "*",
                 {
                   item: {
-                    block_hero: ["*"],
+                    block_hero: [
+                      "*",
+                      {
+                        image: ["id", "focal_point_x", "focal_point_y", "width", "height"],
+                      },
+                    ],
                     block_gallery: [
                       "*",
                       {

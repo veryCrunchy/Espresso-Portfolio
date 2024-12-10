@@ -8,7 +8,7 @@ withDefaults(defineProps<TitleProps>(), {
 });
 </script>
 <template>
-	<component :is="as" class="font-medium tracking-wider uppercase font-display text-primary">
+	<component :is="as" class="font-medium tracking-wider uppercase text-accent">
 		<slot />
 	</component>
 </template>
