@@ -1,6 +1,13 @@
-import { apply } from '@directus/visual-editing';
+import { apply, remove } from '@directus/visual-editing';
 
-export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig();
-  apply({ directusUrl: config.public.directusUrl });
+
+  async function init() {
+    remove();
+    await apply({ directusUrl: config.public.directusUrl });
+  }
+
+  nuxtApp.hook('app:mounted', init);
+  nuxtApp.hook('page:finish', init);
 });
