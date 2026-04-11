@@ -6,7 +6,7 @@
           Espresso's Work
         </NuxtLink>
 
-        <div class="flex items-center gap-2 text-sm font-medium text-text/80">
+        <div class="flex items-center gap-2 text-sm font-medium text-text/95">
           <NuxtLink
             to="/"
             class="rounded-full border border-transparent px-4 py-2 transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-text"

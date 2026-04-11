@@ -49,7 +49,7 @@
     <div class="mb-12 max-w-2xl space-y-4">
       <TypographyTitle as="p">{{ cms?.eyebrow }}</TypographyTitle>
       <TypographyHeadline as="h1" size="title" :content="cms?.headline ?? ''" />
-      <p class="text-lg leading-8 text-text/75">
+      <p class="text-lg leading-8 text-text/95">
         {{ cms?.description }}
       </p>
     </div>
@@ -78,7 +78,7 @@
               class="absolute right-5 top-4 select-none text-6xl leading-none text-primary/15 font-serif"
             >"</span>
 
-            <p class="relative z-1 whitespace-pre-line text-base leading-7 text-text/88">
+            <p class="relative z-1 whitespace-pre-line text-base leading-7 text-text">
               {{ t.quote }}
             </p>
 
@@ -94,7 +94,7 @@
 
         <div
           v-else-if="!testimonialsError"
-          class="rounded-2xl border border-dashed border-primary/25 px-6 py-10 text-center text-text/60"
+          class="rounded-2xl border border-dashed border-primary/25 px-6 py-10 text-center text-text/80"
         >
           {{ cms?.empty_state }}
         </div>
@@ -105,7 +105,7 @@
         <div class="space-y-2">
           <TypographyTitle as="p">{{ cms?.form_eyebrow }}</TypographyTitle>
           <TypographyHeadline as="h2" size="md" :content="cms?.form_headline ?? ''" />
-          <p class="pt-1 text-sm leading-6 text-text/65">{{ cms?.form_description }}</p>
+          <p class="pt-1 text-sm leading-6 text-text/85">{{ cms?.form_description }}</p>
         </div>
 
         <form class="mt-6 space-y-4" @submit.prevent="submitTestimonial" novalidate>
@@ -116,7 +116,7 @@
               type="text"
               maxlength="80"
               autocomplete="name"
-              class="w-full rounded-xl border border-primary/20 bg-background px-4 py-2.5 text-sm text-text outline-none transition-colors placeholder:text-text/35 focus:border-accent"
+              class="w-full rounded-xl border border-primary/20 bg-background px-4 py-2.5 text-sm text-text outline-none transition-colors placeholder:text-text/45 focus:border-accent"
               placeholder="How should we credit you?"
             >
           </label>
@@ -127,7 +127,7 @@
               v-model="form.subject"
               type="text"
               maxlength="120"
-              class="w-full rounded-xl border border-primary/20 bg-background px-4 py-2.5 text-sm text-text outline-none transition-colors placeholder:text-text/35 focus:border-accent"
+              class="w-full rounded-xl border border-primary/20 bg-background px-4 py-2.5 text-sm text-text outline-none transition-colors placeholder:text-text/45 focus:border-accent"
               placeholder="One line that captures it"
             >
           </label>
@@ -138,7 +138,7 @@
               v-model="form.quote"
               rows="6"
               maxlength="2000"
-              class="w-full resize-none rounded-xl border border-primary/20 bg-background px-4 py-2.5 text-sm leading-7 text-text outline-none transition-colors placeholder:text-text/35 focus:border-accent"
+              class="w-full resize-none rounded-xl border border-primary/20 bg-background px-4 py-2.5 text-sm leading-7 text-text outline-none transition-colors placeholder:text-text/45 focus:border-accent"
               placeholder="Write it however feels right."
             />
           </label>
