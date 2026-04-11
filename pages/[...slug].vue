@@ -18,7 +18,7 @@
   });
 
   const { data: page, error } = await useAsyncData(
-    () => `page:${route.path}`,
+    `page:${route.path}`,
     () => {
       return $directus.request(
         $readItems("pages", {
