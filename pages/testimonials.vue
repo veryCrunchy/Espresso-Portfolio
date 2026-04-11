@@ -1,6 +1,9 @@
 <script setup lang="ts">
   import type { Testimonial, TestimonialsPage, TestimonialSubmission } from '~/types';
 
+  const config = useRuntimeConfig();
+  const directusUrl = config.public.directusUrl;
+
   const [{ data: cms }, { data: testimonials, error: testimonialsError, pending }] =
     await Promise.all([
       useAsyncData('testimonials-page', () => $fetch<TestimonialsPage>('/api/testimonials-page')),
@@ -11,6 +14,10 @@
     title: computed(() => cms.value?.eyebrow ?? 'Testimonials'),
     description: computed(() => cms.value?.description ?? ''),
   });
+
+  function assetUrl(id: string) {
+    return `${directusUrl}/assets/${id}`;
+  }
 
   const form = reactive<TestimonialSubmission>({ name: '', subject: '', quote: '' });
   const submitError = ref('');
@@ -83,6 +90,15 @@
             </p>
 
             <footer class="mt-5 flex flex-wrap items-center gap-3 border-t border-primary/12 pt-4">
+              <!-- optional image / avatar -->
+              <img
+                v-if="t.image"
+                :src="assetUrl(t.image)"
+                :alt="t.name"
+                class="h-9 w-9 rounded-full object-cover ring-1 ring-primary/20"
+                loading="lazy"
+                decoding="async"
+              />
               <span class="font-semibold text-text">{{ t.name }}</span>
               <span
                 v-if="t.subject"
@@ -117,7 +133,7 @@
               maxlength="80"
               autocomplete="name"
               class="w-full rounded-xl border border-primary/20 bg-background px-4 py-2.5 text-sm text-text outline-none transition-colors placeholder:text-text/45 focus:border-accent"
-              placeholder="How should we credit you?"
+              :placeholder="cms?.placeholder_name ?? 'How should we credit you?'"
             >
           </label>
 
@@ -128,7 +144,7 @@
               type="text"
               maxlength="120"
               class="w-full rounded-xl border border-primary/20 bg-background px-4 py-2.5 text-sm text-text outline-none transition-colors placeholder:text-text/45 focus:border-accent"
-              placeholder="One line that captures it"
+              :placeholder="cms?.placeholder_subject ?? 'One line that captures it'"
             >
           </label>
 
@@ -139,7 +155,7 @@
               rows="6"
               maxlength="2000"
               class="w-full resize-none rounded-xl border border-primary/20 bg-background px-4 py-2.5 text-sm leading-7 text-text outline-none transition-colors placeholder:text-text/45 focus:border-accent"
-              placeholder="Write it however feels right."
+              :placeholder="cms?.placeholder_quote ?? 'Write it however feels right.'"
             />
           </label>
 

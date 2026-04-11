@@ -20,9 +20,9 @@ import type { Schema } from '~/types/schema';
 export default defineNuxtPlugin(() => {
     const config = useRuntimeConfig();
     const client = createDirectus<Schema>(config.public.directusUrl)
-        .with(authentication('json', { credentials: 'include' }))
-        .with(graphql({ credentials: 'include' }))
-        .with(rest({ credentials: 'include' }));
+        .with(authentication('json'))
+        .with(graphql())
+        .with(rest());
 
     const directus = import.meta.client ? client.with(realtime()) : client;
 

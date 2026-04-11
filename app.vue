@@ -40,19 +40,22 @@
 
           <NuxtLink
             to="/"
+            exact-active-class="border-primary/30 bg-primary/10"
             class="rounded-full border border-transparent px-4 py-2 transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-text"
           >
             Home
           </NuxtLink>
           <NuxtLink
             to="/links"
+            active-class="border-primary/30 bg-primary/10"
             class="rounded-full border border-transparent px-4 py-2 transition-colors hover:border-primary/30 hover:bg-primary/10 hover:text-text"
           >
             Links
           </NuxtLink>
           <NuxtLink
             to="/testimonials"
-            class="rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-text transition-colors hover:bg-primary/20"
+            active-class="border-primary/30 bg-primary/10"
+            class="rounded-full border border-transparent px-4 py-2 text-text transition-colors hover:bg-primary/20"
           >
             Testimonials
           </NuxtLink>

@@ -1,18 +1,16 @@
 <script lang="ts" setup>
   const { $directus, $readItems } = useNuxtApp();
-  const { path } = useRoute();
+  const route = useRoute();
 
   const slug = computed(() => {
+    const path = route.path;
     let finalPath;
 
     if (path === "/") {
-      // Match the homepage
       finalPath = "/";
     } else if (path.endsWith("/")) {
-      // Remove any other trailing slash
       finalPath = path.slice(0, -1);
     } else {
-      // Match any other page
       finalPath = path;
     }
 
@@ -20,7 +18,7 @@
   });
 
   const { data: page, error } = await useAsyncData(
-    path,
+    () => `page:${route.path}`,
     () => {
       return $directus.request(
         $readItems("pages", {
@@ -60,14 +58,33 @@
     },
     {
       server: true,
-
+      watch: [() => route.path],
       transform: (data) => {
         return data[0];
       },
     }
   );
+
+  // Per-page color overrides — only inject a style tag when the page has overrides set
+  useHead(computed(() => {
+    const p = page.value;
+    if (!p?.color_text && !p?.color_background && !p?.color_primary && !p?.color_accent) {
+      return {};
+    }
+    const parts = [
+      p.color_text ? `--color-text: ${p.color_text};` : '',
+      p.color_background ? `--color-background: ${p.color_background};` : '',
+      p.color_primary ? `--color-primary: ${p.color_primary};` : '',
+      p.color_accent ? `--color-accent: ${p.color_accent};` : '',
+    ].filter(Boolean).join('\n  ');
+    return {
+      style: [{ key: 'page-theme', innerHTML: `:root {\n  ${parts}\n}` }],
+    };
+  }));
 </script>
 <template>
   <PageBuilder v-if="page" :page="page" />
-  {{ error?.toJSON() }}
+  <div v-else-if="error" class="px-6 py-20 text-center text-text/60">
+    Page not found.
+  </div>
 </template>

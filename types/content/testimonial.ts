@@ -5,6 +5,7 @@ export interface Testimonial {
   subject: string;
   quote: string;
   date_created?: string | null;
+  image?: string | null;
 }
 
 export interface TestimonialSubmission {
@@ -23,4 +24,7 @@ export interface TestimonialsPage {
   form_description: string;
   success_message: string;
   empty_state: string;
+  placeholder_name: string | null;
+  placeholder_subject: string | null;
+  placeholder_quote: string | null;
 }

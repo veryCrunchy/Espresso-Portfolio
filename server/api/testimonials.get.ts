@@ -8,7 +8,7 @@ export default defineEventHandler(async () => {
   try {
     return await directus.request(
       readItems('testimonials', {
-        fields: ['id', 'name', 'subject', 'quote', 'status', 'date_created'],
+        fields: ['id', 'name', 'subject', 'quote', 'status', 'date_created', 'image'],
         filter: {
           status: {
             _eq: 'published',

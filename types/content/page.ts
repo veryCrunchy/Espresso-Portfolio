@@ -10,6 +10,10 @@ export interface Page {
     sort?: number | null;
     status?: string;
     title?: string | null;
+    color_text?: string | null;
+    color_background?: string | null;
+    color_primary?: string | null;
+    color_accent?: string | null;
     blocks?: (string | PageBlock)[];
 }
 
