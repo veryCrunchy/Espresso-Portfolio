@@ -22,17 +22,20 @@
               :target="activity.buttons?.[0]?.url ? '_blank' : undefined"
               :rel="activity.buttons?.[0]?.url ? 'noopener noreferrer' : undefined"
               class="hidden items-center gap-2 rounded-full border border-accent/20 bg-accent/8 px-3 py-1.5 text-xs text-text/90 transition-colors hover:border-accent/35 hover:bg-accent/12 lg:flex"
-              :title="activity.details ?? activity.name"
+              :title="[activity.name, activity.details, activity.state].filter(Boolean).join(' · ')"
             >
               <!-- pulsing dot -->
               <span class="relative flex h-2 w-2 shrink-0">
                 <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
                 <span class="relative inline-flex h-2 w-2 rounded-full bg-accent" />
               </span>
-              <span class="max-w-[180px] truncate">
+              <span class="max-w-[240px] truncate">
                 <span class="font-medium text-accent">{{ activity.name }}</span>
                 <template v-if="activity.details">
                   <span class="mx-1 text-text/40">·</span>{{ activity.details }}
+                </template>
+                <template v-if="activity.state">
+                  <span class="mx-1 text-text/40">—</span><span class="text-text/65">{{ activity.state }}</span>
                 </template>
               </span>
             </a>
