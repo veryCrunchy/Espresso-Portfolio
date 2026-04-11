@@ -29,4 +29,12 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     // "@nuxt/ui",
   ],
+
+  routeRules: {
+    "/**": {
+      headers: {
+        "Content-Security-Policy": "frame-ancestors 'self' https://cms.espressos.work",
+      },
+    },
+  },
 });

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { setAttr } from '@directus/visual-editing';
 import type { BlockRichtext } from '~/types';
 
 withDefaults(
@@ -14,7 +15,9 @@ withDefaults(
 </script>
 
 <template>
-	<BlockContainer>
+	<BlockContainer
+		:data-directus="setAttr({ collection: 'block_richtext', item: data.id, fields: 'title,headline,content,alignment', mode: 'drawer' })"
+	>
 		<div
 			:class="[
 				{

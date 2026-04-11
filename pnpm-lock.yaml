@@ -11,6 +11,9 @@ importers:
       '@directus/sdk':
         specifier: ^21.2.2
         version: 21.2.2
+      '@directus/visual-editing':
+        specifier: ^2.0.0
+        version: 2.0.0
       '@headlessui/vue':
         specifier: ^1.7.23
         version: 1.7.23(vue@3.5.13(typescript@5.6.3))
@@ -236,6 +239,10 @@ packages:
   '@directus/sdk@21.2.2':
     resolution: {integrity: sha512-T8UhDG+GY534AqvLpRmycLYZmIYIaUYzu25X3WeUjWuxCvqAiKqXbYUrTRb0A5Mw93vUeVuyqabzvLbBY9AXxQ==}
     engines: {node: '>=22'}
+
+  '@directus/visual-editing@2.0.0':
+    resolution: {integrity: sha512-cPcMEPiFVdVO6KeC3OcuZPRoiYHxeATBJSflbewhcwGuG0Qze6ybKL+WWtCgV+mS4DCFbPd/7+ctQPu/JL60RQ==}
+    engines: {node: '>=22.12.0'}
 
   '@esbuild/aix-ppc64@0.21.5':
     resolution: {integrity: sha512-1SDgH6ZSPTlggy1yI6+Dbkiz8xzpHJEVAlF/AM1tHPLsf5STom9rwtjE4hKAF20FfXXNTFqEYXyJNWh1GiZedQ==}
@@ -925,6 +932,9 @@ packages:
 
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
+
+  '@reach/observe-rect@1.2.0':
+    resolution: {integrity: sha512-Ba7HmkFgfQxZqqaeIWWkNK0rEhpxVQHIoVyW1YDSkGsGIXzcaW4deC8B0pZrNSSyLTdIk7y+5olKt5+g0GmFIQ==}
 
   '@redocly/ajv@8.11.2':
     resolution: {integrity: sha512-io1JpnwtIcvojV7QKDUSIuMN/ikdOUd1ReEnUnMKGfDVridQZ31J0MmIuqwuRjWDZfmvr+Q0MqCcfHM2gTivOg==}
@@ -4548,6 +4558,10 @@ snapshots:
 
   '@directus/sdk@21.2.2': {}
 
+  '@directus/visual-editing@2.0.0':
+    dependencies:
+      '@reach/observe-rect': 1.2.0
+
   '@esbuild/aix-ppc64@0.21.5':
     optional: true
 
@@ -5364,6 +5378,8 @@ snapshots:
   '@polka/url@1.0.0-next.28': {}
 
   '@popperjs/core@2.11.8': {}
+
+  '@reach/observe-rect@1.2.0': {}
 
   '@redocly/ajv@8.11.2':
     dependencies:

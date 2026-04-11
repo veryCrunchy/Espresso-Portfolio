@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { setAttr } from '@directus/visual-editing';
   import type { BlockHero, BlockButtonGroup, File } from "~/types";
 
   const props = defineProps<{
@@ -21,7 +22,10 @@
   });
 </script>
 <template>
-  <BlockContainer class="relative flex lt-md:flex-col h-min gap-12">
+  <BlockContainer
+    class="relative flex lt-md:flex-col h-min gap-12"
+    :data-directus="setAttr({ collection: 'block_hero', item: data.id, fields: 'title,headline,content,image,buttons,text_alignment,image_position', mode: 'drawer' })"
+  >
     <!-- Content -->
     <div class="md:pt-12 flex-2 my-a">
       <span

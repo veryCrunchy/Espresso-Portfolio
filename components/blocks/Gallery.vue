@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { setAttr } from '@directus/visual-editing';
   import type { BlockGallery, BlockGalleryFile, File } from "~/types";
 
   const props = defineProps<{
@@ -22,7 +23,9 @@
 </script>
 
 <template>
-  <BlockContainer>
+  <BlockContainer
+    :data-directus="setAttr({ collection: 'block_gallery', item: data.id, fields: 'title,headline,images,random_order', mode: 'drawer' })"
+  >
     <TypographyTitle v-if="data.title">{{ data.title }}</TypographyTitle>
     <TypographyHeadline
       v-if="data.headline"
