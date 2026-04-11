@@ -19,7 +19,7 @@
     return `${directusUrl}/assets/${id}`;
   }
 
-  const form = reactive<TestimonialSubmission>({ name: '', subject: '', quote: '' });
+  const form = reactive<TestimonialSubmission>({ name: '', subject: '', quote: '', image_url: '' });
   const submitError = ref('');
   const submitSuccess = ref('');
   const isSubmitting = ref(false);
@@ -40,6 +40,7 @@
       form.name = '';
       form.subject = '';
       form.quote = '';
+      form.image_url = '';
       submitSuccess.value = cms.value?.success_message ?? 'Submitted — pending approval.';
     } catch (err) {
       submitError.value =
@@ -92,12 +93,13 @@
             <footer class="mt-5 flex flex-wrap items-center gap-3 border-t border-primary/12 pt-4">
               <!-- optional image / avatar -->
               <img
-                v-if="t.image"
-                :src="assetUrl(t.image)"
+                v-if="t.image_url || t.image"
+                :src="t.image_url ?? assetUrl(t.image!)"
                 :alt="t.name"
                 class="h-9 w-9 rounded-full object-cover ring-1 ring-primary/20"
                 loading="lazy"
                 decoding="async"
+                @error="($event.target as HTMLImageElement).style.display = 'none'"
               />
               <span class="font-semibold text-text">{{ t.name }}</span>
               <span
@@ -157,6 +159,18 @@
               class="w-full resize-none rounded-xl border border-primary/20 bg-background px-4 py-2.5 text-sm leading-7 text-text outline-none transition-colors placeholder:text-text/45 focus:border-accent"
               :placeholder="cms?.placeholder_quote ?? 'Write it however feels right.'"
             />
+          </label>
+
+          <label class="block space-y-1.5">
+            <span class="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Add an image <span class="normal-case font-normal text-text/50">(optional — go wild)</span></span>
+            <input
+              v-model="form.image_url"
+              type="url"
+              maxlength="500"
+              class="w-full rounded-xl border border-primary/20 bg-background px-4 py-2.5 text-sm text-text outline-none transition-colors placeholder:text-text/45 focus:border-accent"
+              placeholder="https://example.com/image.gif"
+            >
+            <p class="text-xs text-text/45">Needs to be a direct image URL — on Tenor, right-click the GIF and choose <em>Copy image address</em>.</p>
           </label>
 
           <p

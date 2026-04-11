@@ -6,12 +6,14 @@ export interface Testimonial {
   quote: string;
   date_created?: string | null;
   image?: string | null;
+  image_url?: string | null;
 }
 
 export interface TestimonialSubmission {
   name: string;
   subject: string;
   quote: string;
+  image_url?: string;
 }
 
 export interface TestimonialsPage {

@@ -11,6 +11,7 @@ export default defineEventHandler(async (event) => {
   const name = normalizeField(body?.name, 80);
   const subject = normalizeField(body?.subject, 120);
   const quote = normalizeField(body?.quote, 2000);
+  const image_url = normalizeField(body?.image_url, 500) || undefined;
 
   if (!name || !subject || !quote) {
     throw createError({
@@ -28,6 +29,7 @@ export default defineEventHandler(async (event) => {
         quote,
         status: 'draft',
         subject,
+        image_url,
       })
     );
   } catch (error) {
