@@ -10,7 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@directus/sdk": "^18.0.0",
+    "@directus/sdk": "^21.2.2",
     "@headlessui/vue": "^1.7.23",
     "@nuxt/fonts": "^0.10.2",
     "@nuxt/image": "1.8.1",

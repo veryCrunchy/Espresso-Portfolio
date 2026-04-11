@@ -10,8 +10,10 @@ export default defineNuxtConfig({
     "@unocss/reset/tailwind.css",
   ],
   runtimeConfig: {
+    directusToken: "",
     public: {
       directusUrl: "",
+      siteUrl: "http://localhost:3000",
     },
   },
 

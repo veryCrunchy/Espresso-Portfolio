@@ -73,3 +73,29 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+## Directus Notes
+
+Set the following environment variables for local development:
+
+```bash
+NUXT_PUBLIC_DIRECTUS_URL=https://your-directus-instance.example
+NUXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+If you don't want to allow public testimonial submissions from the Directus public role, add a server token:
+
+```bash
+NUXT_DIRECTUS_TOKEN=your-directus-static-token
+```
+
+The testimonial page expects a `testimonials` collection in Directus with these fields:
+
+```text
+name      string
+subject   string
+quote     text
+status    string
+```
+
+Published testimonials are displayed on the site. New submissions are created as `draft` so they stay subject to approval.

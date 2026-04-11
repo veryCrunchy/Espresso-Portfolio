@@ -3,7 +3,7 @@ import type {
     BlockRichtext,
 
 } from './blocks';
-import type { Page } from './content';
+import type { Page, Testimonial, TestimonialsPage } from './content';
 
 
 //Directus Schema
@@ -13,4 +13,6 @@ import type { Page } from './content';
 
 export interface Schema {
     pages: Page[]
+    testimonials: Testimonial[]
+    testimonials_page: TestimonialsPage
 }
