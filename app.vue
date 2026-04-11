@@ -29,17 +29,43 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { SiteSettings } from '~/types/content/site-settings';
+
+const { data: theme } = await useAsyncData<SiteSettings>(
+  'site-settings',
+  () => $fetch('/api/site-settings'),
+  {
+    default: () => ({
+      id: 0,
+      color_text: 'rgb(255, 204, 129)',
+      color_background: 'rgb(19, 12, 9)',
+      color_primary: 'rgb(184, 139, 71)',
+      color_secondary: 'rgb(110, 90, 61)',
+      color_accent: 'rgb(183, 151, 102)',
+    }),
+  }
+);
+
+useHead({
+  style: [
+    {
+      key: 'theme',
+      innerHTML: computed(
+        () => `:root {
+  --color-text: ${theme.value?.color_text};
+  --color-background: ${theme.value?.color_background};
+  --color-primary: ${theme.value?.color_primary};
+  --color-secondary: ${theme.value?.color_secondary};
+  --color-accent: ${theme.value?.color_accent};
+}`
+      ),
+    },
+  ],
+});
+</script>
 
 <style>
-  :root {
-    --color-text: rgb(255, 204, 129);
-    --color-background: rgb(19, 12, 9);
-    --color-primary: rgb(184, 139, 71);
-    --color-secondary: rgb(110, 90, 61);
-    --color-accent: rgb(183, 151, 102);
-  }
-
   body {
     --uno: bg-background color-text;
     margin: 0;
