@@ -1,5 +1,4 @@
-import { getPreMIDActivity } from '../utils/premid-store';
-
-export default defineEventHandler(() => {
+export default defineEventHandler((event) => {
+  setResponseHeader(event, 'Cache-Control', 'no-store');
   return { activity: getPreMIDActivity() };
 });

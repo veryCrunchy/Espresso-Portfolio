@@ -1,4 +1,4 @@
-import type { PreMIDActivity } from '~/types/premid';
+import type { PreMIDActivity } from '#shared/types/premid';
 
 interface ActivityStore {
   activity: PreMIDActivity | null
