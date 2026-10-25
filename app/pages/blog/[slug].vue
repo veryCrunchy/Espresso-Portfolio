@@ -8,9 +8,12 @@ const { siteUrl } = useRuntimeConfig().public;
 const { data: settings } = useSiteSettings();
 const assetUrl = useAssetUrl();
 
-const { data, error } = await useCmsFetch<PostDetail>(() => `/api/posts/${encodeURIComponent(slug.value)}`, {
-  key: computed(() => `post:${slug.value}`),
-});
+const [{ data, error }, { data: blogPage }] = await Promise.all([
+  useCmsFetch<PostDetail>(() => `/api/posts/${encodeURIComponent(slug.value)}`, {
+    key: computed(() => `post:${slug.value}`),
+  }),
+  useCmsPage('/blog'),
+]);
 
 if (error.value || !data.value) {
   throw createError({
@@ -23,6 +26,10 @@ if (error.value || !data.value) {
 const post = computed(() => data.value!.post);
 const url = computed(() => joinURL(siteUrl, 'blog', post.value.slug));
 const author = computed(() => post.value.author_name || 'Jamie N. Needham');
+const isDraft = computed(() => !!post.value.status && post.value.status !== 'published');
+
+// The blog's look comes from the CMS page /blog; each post can override it.
+usePageTheme(() => mergeDesign(blogPage.value, post.value));
 
 usePageSeo(() => ({
   title: post.value.seo_title || post.value.title,
@@ -115,7 +122,12 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScroll));
   <div>
     <div class="fixed inset-x-0 top-0 z-40 h-0.5 origin-left bg-accent" :style="{ transform: `scaleX(${progress})` }" aria-hidden="true" />
 
-    <article ref="articleEl" class="mx-auto max-w-3xl px-4 pb-10 pt-10 sm:px-6 lg:pt-16">
+    <article ref="articleEl" class="mx-auto max-w-3xl px-4 pb-8 pt-8 sm:px-6 lg:pt-12">
+      <p v-if="isDraft" role="status" class="mb-6 flex items-center gap-2 rounded-xl border border-accent/40 bg-accent/10 px-4 py-3 text-sm">
+        <Icon name="material-symbols:visibility-rounded" class="size-5 text-accent" />
+        Preview of a {{ post.status }} post — only you can see this.
+      </p>
+
       <nav class="mb-8 text-sm" aria-label="Breadcrumb">
         <NuxtLink to="/blog" class="inline-flex items-center gap-1 text-text/65 transition-colors hover:text-accent">
           <Icon name="material-symbols:arrow-back-rounded" class="size-4" /> All posts
@@ -128,7 +140,7 @@ onBeforeUnmount(() => window.removeEventListener('scroll', onScroll));
           <span>· {{ post.reading_minutes }} min read</span>
           <span>· {{ author }}</span>
         </div>
-        <h1 class="text-4xl font-semibold leading-tight tracking-tight md:text-5xl">{{ post.title }}</h1>
+        <h1 class="headline text-4xl font-semibold leading-tight tracking-tight md:text-5xl">{{ post.title }}</h1>
         <p v-if="post.excerpt" class="text-xl leading-8 text-text/75">{{ post.excerpt }}</p>
         <ul v-if="post.tags?.length" class="flex flex-wrap gap-2">
           <li v-for="t in post.tags" :key="t">

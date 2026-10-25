@@ -18,6 +18,7 @@ pnpm dev
 | `NUXT_DIRECTUS_TOKEN` | Server-side Directus token (reads + testimonial submissions) |
 | `NUXT_PUBLIC_SITE_URL` | Public site URL for canonical links, sitemap and RSS (defaults to `https://espressos.work`) |
 | `NUXT_PREMID_SECRET` | Shared secret required by `POST /api/premid` |
+| `NUXT_PREVIEW_SECRET` | Secret in the CMS preview URLs that unlocks drafts and unsaved versions |
 
 Other scripts: `pnpm build`, `pnpm preview`, `pnpm typecheck`.
 
@@ -34,12 +35,15 @@ Other scripts: `pnpm build`, `pnpm preview`, `pnpm typecheck`.
 
 ## Editing content (CMS guide)
 
-- **Pages** are built from blocks: Hero, Rich text, Gallery, **YouTube** (latest uploads from a channel), **Latest posts** and **Social links**. Page-level colors and an SEO description/image can be set per page.
+- **Pages** are built from blocks: Hero, Rich text, Gallery, **YouTube** (latest uploads from a channel), **Latest posts**, **Social links** and **Recent activity** (YouTube uploads and blog posts in one feed). Gallery blocks placed directly after each other become one gallery with tabs.
+- **Design** — every page, post, the Links and Testimonials pages, and Site settings have a *Design* group: colors, text size, heading size, spacing, corner roundness, heading/body font and content width. Site settings are the defaults; anything left empty elsewhere inherits them.
+- **Built-in routes** (`/blog`, `/links`) also read a CMS page with the same slug: its design applies to that route and its blocks are shown on it (e.g. the Recent activity feed on `/links`).
 - **Posts** power `/blog`. Set the status to *Published* to make a post live; a future *Published at* date schedules it. Tags, excerpt, cover image and SEO fields are optional. Pinned (*featured*) posts sort first.
 - **Blog page** holds the copy at the top of `/blog`.
 - **Links** appear on `/links`, in the footer and in the Social links block. Brand icons are detected from the URL; set *Icon* (e.g. `simple-icons:bluesky`) to override.
 - **Site settings** holds theme colors, the site name and description, the default link-preview image, the X/Twitter handle, the header menu and footer text.
 - **Testimonials** submitted on the site arrive as drafts for approval.
+- **Preview** — every collection has a preview URL. Drafts and unsaved content versions are only shown when the URL carries `NUXT_PREVIEW_SECRET`; `scripts/setup-directus.mjs` writes the preview URLs using that same value.
 
 Uploaded images are served resized and in modern formats (AVIF/WebP) through Directus. Keep uploads in the `public` folder (the default for every image field) so visitors can see them.
 

@@ -20,3 +20,12 @@ export interface BlockLinks {
     title?: string | null;
     headline?: string | null;
 }
+
+export interface BlockActivity {
+    id?: string;
+    title?: string | null;
+    headline?: string | null;
+    youtube_channel?: string | null;
+    include_posts?: boolean | null;
+    limit?: number | null;
+}

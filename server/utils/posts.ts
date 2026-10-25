@@ -15,6 +15,13 @@ export const POST_SUMMARY_FIELDS = [
   { cover_image: ['id', 'title', 'description', 'width', 'height', 'focal_point_x', 'focal_point_y'] },
 ] as const;
 
+/** Design overrides a post can set (see shared/types/content/design.ts). */
+export const DESIGN_FIELDS = [
+  'color_text', 'color_background', 'color_primary', 'color_secondary', 'color_accent',
+  'text_scale', 'heading_scale', 'spacing_scale', 'radius_scale',
+  'heading_font', 'body_font', 'content_width',
+];
+
 type RawPost = Post & { date_created?: string | null };
 
 /** Published posts whose publish date is not in the future. */
@@ -53,7 +60,9 @@ export async function listPosts(options: { limit: number; page?: number; tag?: s
     }),
   )) as RawPost[]).map(normalizePost);
 
-  const tags = [...new Set(all.flatMap((p) => p.tags ?? []))].sort();
+  const tagCounts: Record<string, number> = {};
+  for (const t of all.flatMap((p) => p.tags ?? [])) tagCounts[t] = (tagCounts[t] ?? 0) + 1;
+  const tags = Object.keys(tagCounts).sort();
   const matching = options.tag ? all.filter((p) => p.tags?.some((t) => t.toLowerCase() === options.tag)) : all;
   const slice = matching.slice((page - 1) * options.limit, page * options.limit);
 
@@ -67,5 +76,5 @@ export async function listPosts(options: { limit: number; page?: number; tag?: s
 
   const posts: PostSummary[] = slice.map((post) => ({ ...post, reading_minutes: minutes.get(post.id) ?? 1 }));
 
-  return { posts, total: matching.length, tags };
+  return { posts, total: matching.length, tags, tagCounts, totalAll: all.length };
 }

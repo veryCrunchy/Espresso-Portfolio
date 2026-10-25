@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import design from "./shared/design.json";
+
 export default defineNuxtConfig({
   compatibilityDate: "2026-10-01",
   devtools: { enabled: true },
@@ -8,6 +10,8 @@ export default defineNuxtConfig({
     // Shared secret the PreMID extension must send (Bearer header or ?token=).
     // Leave empty to accept unauthenticated updates (not recommended).
     premidSecret: "",
+    // Secret in the Directus preview URLs (?token=) that unlocks drafts and content versions.
+    previewSecret: "",
     public: {
       directusUrl: "https://cms.espressos.work",
       // Used for canonical URLs, sitemap and RSS — override with NUXT_PUBLIC_SITE_URL locally.
@@ -53,7 +57,8 @@ export default defineNuxtConfig({
   },
 
   fonts: {
-    families: [{ name: "Inter", provider: "google", weights: [400, 500, 600, 700] }],
+    // Every font offered in the CMS "Design" settings. Only fonts a page uses get downloaded by visitors.
+    families: design.fonts.map((f) => ({ name: f.name, provider: "google", weights: [400, 500, 600, 700], global: true })),
   },
 
   routeRules: {
@@ -65,6 +70,7 @@ export default defineNuxtConfig({
       },
     },
     "/testimomial": { redirect: { to: "/testimonials", statusCode: 301 } },
+    "/social": { redirect: { to: "/links", statusCode: 302 } },
     "/_nuxt/**": { headers: { "Cache-Control": "public, max-age=31536000, immutable" } },
   },
 });

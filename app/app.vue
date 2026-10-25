@@ -24,16 +24,8 @@ useHead({
   style: [
     {
       key: 'theme',
-      innerHTML: () => {
-        const t = { ...DEFAULT_THEME, ...theme.value };
-        return `:root {
-  --color-text: ${t.color_text};
-  --color-background: ${t.color_background};
-  --color-primary: ${t.color_primary};
-  --color-secondary: ${t.color_secondary};
-  --color-accent: ${t.color_accent};
-}`;
-      },
+      // Site-wide design defaults; pages and posts override these via usePageTheme.
+      innerHTML: () => designCss(designVars(mergeDesign(DEFAULT_THEME, theme.value))),
     },
   ],
 });

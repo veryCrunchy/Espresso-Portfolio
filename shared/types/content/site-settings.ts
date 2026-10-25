@@ -1,11 +1,12 @@
 import type { File } from '../system';
+import type { DesignSettings } from './design';
 
 export interface NavItem {
   label: string
   url: string
 }
 
-export interface SiteSettings {
+export interface SiteSettings extends DesignSettings {
   id: number
   color_text: string
   color_background: string

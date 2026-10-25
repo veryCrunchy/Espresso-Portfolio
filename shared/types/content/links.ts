@@ -1,3 +1,5 @@
+import type { DesignSettings } from './design';
+
 export interface Link {
   id: number
   status: 'published' | 'draft'
@@ -11,7 +13,7 @@ export interface Link {
   description?: string | null
 }
 
-export interface LinksPage {
+export interface LinksPage extends DesignSettings {
   id: number
   headline: string
   description: string | null

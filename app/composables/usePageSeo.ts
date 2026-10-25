@@ -1,7 +1,7 @@
 import { computed, toValue, type MaybeRefOrGetter } from 'vue';
 import { useHead, useRoute, useRuntimeConfig, useSeoMeta } from 'nuxt/app';
 import { joinURL, withoutTrailingSlash } from 'ufo';
-import { useAssetUrl, useSiteSettings } from './useCms';
+import { useAssetUrl, useCmsPreview, useSiteSettings } from './useCms';
 import type { File } from '#shared/types';
 
 interface PageSeo {
@@ -25,6 +25,7 @@ export function usePageSeo(input: MaybeRefOrGetter<PageSeo>) {
   const { siteUrl } = useRuntimeConfig().public;
   const { data: settings } = useSiteSettings();
   const assetUrl = useAssetUrl();
+  const preview = useCmsPreview();
 
   const seo = computed(() => toValue(input));
   const siteName = computed(() => settings.value?.site_name || "Espresso's Work");
@@ -54,6 +55,6 @@ export function usePageSeo(input: MaybeRefOrGetter<PageSeo>) {
     twitterCard: () => (image.value ? 'summary_large_image' : 'summary'),
     twitterSite: () => settings.value?.twitter_handle || undefined,
     twitterCreator: () => settings.value?.twitter_handle || undefined,
-    robots: () => (seo.value.noindex ? 'noindex, nofollow' : undefined),
+    robots: () => (seo.value.noindex || preview.value ? 'noindex, nofollow' : undefined),
   });
 }

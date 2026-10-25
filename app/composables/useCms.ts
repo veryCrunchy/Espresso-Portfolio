@@ -1,6 +1,6 @@
 import { computed, toValue, type MaybeRefOrGetter } from 'vue';
 import { useFetch, useRoute, useRuntimeConfig, useState, type AsyncData, type NuxtError, type UseFetchOptions } from 'nuxt/app';
-import type { File, Link, SiteSettings } from '#shared/types';
+import type { File, Link, Page, SiteSettings } from '#shared/types';
 
 /**
  * True when the site is opened from the CMS (`?preview=true`, or framed by the Directus
@@ -12,7 +12,25 @@ export function useCmsPreview() {
   return computed(() => framed.value || route.query.preview === 'true');
 }
 
-/** `useFetch` for the CMS API routes, adding `?preview=true` while previewing. */
+/**
+ * Query params forwarded to the CMS API while previewing. The preview secret (`token`) is
+ * remembered for the whole visit so drafts stay visible while clicking around; the content
+ * `version` only applies to the URL Directus opened.
+ */
+function usePreviewParams() {
+  const route = useRoute();
+  const preview = useCmsPreview();
+  const token = useState<string | undefined>('cms-preview-token', () =>
+    typeof route.query.token === 'string' ? route.query.token : undefined,
+  );
+  return computed(() => {
+    if (!preview.value) return {};
+    const version = typeof route.query.version === 'string' ? route.query.version : undefined;
+    return { preview: 'true', token: token.value, version };
+  });
+}
+
+/** `useFetch` for the CMS API routes, adding preview params while previewing. */
 export function useCmsFetch<T>(
   url: string | (() => string),
   options: Omit<UseFetchOptions<T, T>, 'query' | 'default'> & {
@@ -20,14 +38,11 @@ export function useCmsFetch<T>(
     default?: () => T;
   } = {},
 ) {
-  const preview = useCmsPreview();
+  const previewParams = usePreviewParams();
   const { query, ...rest } = options;
   return useFetch(url, {
     ...rest,
-    query: computed(() => ({
-      ...toValue(query),
-      ...(preview.value ? { preview: 'true' } : {}),
-    })),
+    query: computed(() => ({ ...toValue(query), ...previewParams.value })),
   } as never) as unknown as AsyncData<T | undefined, NuxtError | undefined>;
 }
 
@@ -46,6 +61,14 @@ export function useSiteSettings() {
     key: 'site-settings',
     default: () => DEFAULT_THEME,
   });
+}
+
+/**
+ * The CMS page for a built-in route (e.g. `/blog`, `/links`), if one exists. Its design
+ * settings theme that route and its blocks are shown on it. A missing page is fine.
+ */
+export function useCmsPage(slug: string) {
+  return useCmsFetch<Page>('/api/page', { key: `page:${slug}`, query: { slug } });
 }
 
 export function useLinks() {

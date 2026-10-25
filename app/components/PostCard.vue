@@ -36,7 +36,7 @@ const to = computed(() => `/blog/${props.post.slug}`);
         <span v-if="post.featured" class="rounded-full bg-accent/20 px-2 py-0.5 text-accent">Pinned</span>
       </div>
 
-      <h2 :class="['font-semibold leading-snug tracking-tight', featured ? 'text-2xl md:text-4xl' : 'text-xl']">
+      <h2 :class="['headline font-semibold leading-snug tracking-tight', featured ? 'text-2xl md:text-4xl' : 'text-xl']">
         <NuxtLink :to="to" class="after:absolute after:inset-0 after:content-['']">{{ post.title }}</NuxtLink>
       </h2>
 

@@ -5,6 +5,8 @@
 //
 // Usage: NUXT_PUBLIC_DIRECTUS_URL=… NUXT_DIRECTUS_TOKEN=<admin token> node scripts/setup-directus.mjs [--dry-run]
 
+import { readFileSync } from 'node:fs';
+
 const BASE = process.env.NUXT_PUBLIC_DIRECTUS_URL?.replace(/\/$/, '');
 const TOKEN = process.env.DIRECTUS_ADMIN_TOKEN || process.env.NUXT_DIRECTUS_TOKEN;
 const DRY = process.argv.includes('--dry-run');
@@ -170,7 +172,83 @@ function collections() {
       meta: { icon: 'link', hidden: true, note: 'Social links from the Links collection', display_template: '{{headline}}' },
       fields: [uuidPk(), ...blockHeader()],
     },
+    {
+      collection: 'block_activity',
+      meta: { icon: 'dynamic_feed', hidden: true, note: 'Recent YouTube uploads and blog posts in one feed', display_template: '{{headline}}' },
+      fields: [
+        uuidPk(),
+        ...blockHeader(),
+        str('youtube_channel', { note: 'Channel ID (UC…) or youtube.com/channel/UC… URL. Leave empty to skip videos.' }),
+        bool('include_posts', true, { width: 'half', note: 'Include blog posts' }),
+        int('limit', 6, { width: 'half', note: 'How many items to show (max 24)' }),
+      ],
+    },
   ];
+}
+
+const DESIGN = JSON.parse(readFileSync(new URL('../shared/design.json', import.meta.url), 'utf8'));
+const label = (translation) => [{ language: 'en-US', translation }];
+
+const scale = (field, title, note, [min, max] = [70, 130]) => ({
+  field, type: 'integer',
+  meta: {
+    interface: 'slider', width: 'half', note, translations: label(title),
+    options: { minValue: min, maxValue: max, stepInterval: 5, alwaysShowValue: true },
+    display: 'formatted-value', display_options: { suffix: '%' },
+  },
+  schema: {},
+});
+
+const color = (field, title, note) => ({
+  field, type: 'string',
+  meta: { interface: 'select-color', width: 'half', note, translations: label(title) },
+  schema: {},
+});
+
+const font = (field, title, note) => ({
+  field, type: 'string',
+  meta: {
+    interface: 'select-dropdown', width: 'half', note, translations: label(title),
+    options: { allowNone: true, choices: DESIGN.fonts.map((f) => ({ text: `${f.name} (${f.kind})`, value: f.name })) },
+  },
+  schema: {},
+});
+
+/**
+ * The "Design" group: colors, sizes, fonts and width. On the site settings these are the
+ * defaults; everywhere else an empty value inherits from the site.
+ */
+function designFields(inherit) {
+  const empty = inherit ? ' Empty = site default.' : '';
+  return [
+    {
+      field: 'design', type: 'alias',
+      meta: {
+        interface: 'group-detail', special: ['alias', 'no-data', 'group'], translations: label('Design'),
+        options: { start: inherit ? 'closed' : 'open', headerIcon: 'palette' },
+        note: inherit ? 'Override the site look for this item.' : 'Default look for the whole site.',
+      },
+    },
+    color('color_background', 'Background color', `Page background.${empty}`),
+    color('color_text', 'Text color', `Body text and headings.${empty}`),
+    color('color_primary', 'Primary color', `Cards, borders and highlighted words.${empty}`),
+    color('color_accent', 'Accent color', `Buttons, links and active tabs.${empty}`),
+    color('color_secondary', 'Secondary color', `Extra theme color.${empty}`),
+    scale('text_scale', 'Text size', `100% = default.${empty}`),
+    scale('heading_scale', 'Heading size', `Size of big headlines, on top of text size.${empty}`, [50, 150]),
+    scale('spacing_scale', 'Spacing', `Lower = more compact.${empty}`, [50, 150]),
+    scale('radius_scale', 'Corner roundness', `0% = sharp corners.${empty}`, [0, 200]),
+    font('heading_font', 'Heading font', `Font for headlines.${empty}`),
+    font('body_font', 'Body font', `Font for everything else.${empty}`),
+    {
+      field: 'content_width', type: 'string',
+      meta: {
+        interface: 'select-dropdown', width: 'half', translations: label('Content width'), note: `How wide the content can get.${empty}`,
+        options: { allowNone: true, choices: Object.keys(DESIGN.contentWidths).map((w) => ({ text: w[0].toUpperCase() + w.slice(1), value: w })) },
+      },
+      schema: {},
+    },
+  ].map((f, i) => (i === 0 ? f : { ...f, meta: { ...f.meta, group: 'design', sort: i } }));
 }
 
 function extraFields() {
@@ -196,12 +274,16 @@ function extraFields() {
         schema: {},
       },
       text('footer_text', { note: 'Small print in the footer' }),
+      ...designFields(false),
     ],
     pages: [
-      { field: 'color_secondary', type: 'string', meta: { interface: 'select-color', width: 'half' }, schema: {} },
       text('seo_description', { note: 'Description for search engines and link previews' }),
       image('seo_image', { note: 'Link preview image for this page' }),
+      ...designFields(true),
     ],
+    posts: designFields(true),
+    links_page: designFields(true),
+    testimonials_page: designFields(true),
     links: [
       str('description', { note: 'Shown under the title' }),
       str('icon', { width: 'half', note: 'Optional Iconify name, e.g. simple-icons:youtube. Detected from the URL when empty.' }),
@@ -215,7 +297,18 @@ const EDITOR_POLICY_NAME = 'Editor';
 // ---------------------------------------------------------------- steps
 
 async function ensureField(collection, def) {
-  if (await exists(`/fields/${collection}/${def.field}`)) return;
+  if (await exists(`/fields/${collection}/${def.field}`)) {
+    // Existing fields (e.g. the original page colors) are moved into their group; data is untouched.
+    if (def.meta?.group) {
+      const current = await api('GET', `/fields/${collection}/${def.field}`);
+      if (current.meta?.group !== def.meta.group) {
+        console.log(`~ field ${collection}.${def.field} → ${def.meta.group} group`);
+        const { group, sort, note, translations, width, options } = def.meta;
+        await api('PATCH', `/fields/${collection}/${def.field}`, { meta: { group, sort, note, translations, width, ...(options && !current.meta?.options ? { options } : {}) } });
+      }
+    }
+    return;
+  }
   const { relation, ...field } = def;
   console.log(`+ field ${collection}.${def.field}`);
   await api('POST', `/fields/${collection}`, field);
@@ -250,6 +343,46 @@ async function ensurePermission(policy, collection, action, extra = {}) {
 
 const ids = { public: null, editor: null };
 
+// Where each collection previews. `{{slug}}` etc. are filled in by Directus.
+const PREVIEW_PATHS = {
+  pages: '{{slug}}',
+  posts: '/blog/{{slug}}',
+  blog_page: '/blog',
+  links: '/links',
+  links_page: '/links',
+  testimonials: '/testimonials',
+  testimonials_page: '/testimonials',
+  site_settings: '/',
+};
+
+/**
+ * Preview URLs carry `preview=true` (skip the cache) and, when NUXT_PREVIEW_SECRET is set,
+ * the secret that lets the site show drafts and unsaved content versions.
+ */
+async function ensurePreviewUrls() {
+  const site = (process.env.PREVIEW_SITE_URL || 'https://espressos.work').replace(/\/$/, '');
+  const secret = process.env.NUXT_PREVIEW_SECRET;
+  const params = `preview=true${secret ? `&token=${encodeURIComponent(secret)}` : ''}`;
+
+  for (const [collection, path] of Object.entries(PREVIEW_PATHS)) {
+    const current = await api('GET', `/collections/${collection}`).catch(() => null);
+    if (!current) continue;
+    const version = current.meta?.versioning ? '&version={{$version}}' : '';
+    const url = `${site}${path}?${params}${version}`;
+    if (current.meta?.preview_url !== url) {
+      console.log(`~ preview URL ${collection}`);
+      await api('PATCH', `/collections/${collection}`, { meta: { preview_url: url } });
+    }
+  }
+
+  const settings = await api('GET', '/settings?fields=visual_editor_urls');
+  const editorUrl = `${site}/?${params}`;
+  if (settings?.visual_editor_urls?.[0]?.url !== editorUrl) {
+    console.log('~ visual editor URL');
+    await api('PATCH', '/settings', { visual_editor_urls: [{ url: editorUrl }] });
+  }
+}
+
 async function main() {
   console.log(`Directus: ${BASE}${DRY ? ' (dry run)' : ''}`);
 
@@ -268,16 +401,16 @@ async function main() {
   // Allow the new blocks in the page builder.
   const rel = await api('GET', '/relations/pages_blocks/item');
   const allowed = new Set(rel.meta.one_allowed_collections ?? []);
-  const wanted = ['block_youtube', 'block_posts', 'block_links'];
+  const wanted = ['block_youtube', 'block_posts', 'block_links', 'block_activity'];
   if (wanted.some((c) => !allowed.has(c))) {
-    console.log('+ page builder blocks', wanted.join(', '));
-    await api('PATCH', '/relations/pages_blocks/item', { meta: { one_allowed_collections: [...allowed, ...wanted] } });
+    console.log('+ page builder blocks', wanted.filter((c) => !allowed.has(c)).join(', '));
+    await api('PATCH', '/relations/pages_blocks/item', { meta: { one_allowed_collections: [...new Set([...allowed, ...wanted])] } });
   }
 
   // Permissions.
   if (ids.public) {
     await ensurePermission(ids.public, 'posts', 'read', { permissions: { status: { _eq: 'published' } } });
-    for (const c of ['blog_page', 'block_youtube', 'block_posts', 'block_links']) await ensurePermission(ids.public, c, 'read');
+    for (const c of ['blog_page', 'block_youtube', 'block_posts', 'block_links', 'block_activity']) await ensurePermission(ids.public, c, 'read');
 
     // Close the moderation bypass: public submissions may not choose their own status.
     const publicCreate = await api('GET', `/permissions?filter[policy][_eq]=${ids.public}&filter[collection][_eq]=testimonials&filter[action][_eq]=create&fields=id,validation`);
@@ -293,11 +426,13 @@ async function main() {
     }
   }
   if (ids.editor) {
-    for (const c of ['posts', 'block_youtube', 'block_posts', 'block_links']) {
+    for (const c of ['posts', 'block_youtube', 'block_posts', 'block_links', 'block_activity']) {
       for (const action of ['create', 'read', 'update', 'delete']) await ensurePermission(ids.editor, c, action);
     }
     for (const action of ['read', 'update']) await ensurePermission(ids.editor, 'blog_page', action);
   }
+
+  await ensurePreviewUrls();
 
   console.log('Done.');
 }
