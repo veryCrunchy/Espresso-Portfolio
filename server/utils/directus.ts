@@ -44,13 +44,53 @@ export function isPreview(event: H3Event) {
   return query.preview === 'true' || query.preview === '1';
 }
 
-/** Cached CMS handler: serves stale content while revalidating in the background. */
+/**
+ * What a CMS preview request may see. Drafts and unsaved content versions are only shown
+ * when the request carries the preview secret (`?token=` in the Directus preview URL).
+ */
+export function previewAccess(event: H3Event) {
+  const { previewSecret } = useRuntimeConfig();
+  const query = getQuery(event);
+  const drafts = isPreview(event) && !!previewSecret && query.token === previewSecret;
+  const version = drafts && typeof query.version === 'string' && query.version && query.version !== 'main' ? query.version : undefined;
+  return { drafts, version };
+}
+
+type CmsResult<T> = { value: T } | { error: { statusCode: number; statusMessage?: string } };
+
+/**
+ * Cached CMS handler: serves stale content while revalidating in the background.
+ *
+ * "Not found"-style errors are cached as results rather than thrown: Nitro keeps serving
+ * the stale entry when a background refresh throws, so an unpublished or deleted item
+ * would otherwise stay online forever. Server errors still throw, which keeps the last
+ * good content up while the CMS is unreachable.
+ */
 export function defineCmsHandler<T>(handler: (event: H3Event) => Promise<T>, maxAge = 60) {
-  return defineCachedEventHandler(handler, {
+  const resolve = async (event: H3Event): Promise<CmsResult<T>> => {
+    try {
+      return { value: await handler(event) };
+    } catch (error) {
+      const statusCode = (error as { statusCode?: number }).statusCode;
+      if (statusCode && statusCode >= 400 && statusCode < 500) {
+        return { error: { statusCode, statusMessage: (error as { statusMessage?: string }).statusMessage } };
+      }
+      throw error;
+    }
+  };
+
+  const cached = defineCachedFunction(resolve, {
     maxAge,
     swr: true,
     name: 'cms',
-    getKey: (event) => event.path.replace(/[?&]preview=[^&]*/, ''),
-    shouldBypassCache: isPreview,
+    // Cache storage drops everything after "?" in keys, so encode the full path.
+    getKey: (event: H3Event) => encodeURIComponent(event.path),
+  });
+
+  return defineEventHandler(async (event) => {
+    // Previews always hit the CMS (and may see drafts), so they never touch the cache.
+    const result = isPreview(event) ? await resolve(event) : await cached(event);
+    if ('error' in result) throw createError(result.error);
+    return result.value;
   });
 }

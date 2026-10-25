@@ -6,6 +6,8 @@ const [{ data: cms }, { data: testimonials, error: testimonialsError, pending }]
   useCmsFetch<Testimonial[]>('/api/testimonials', { key: 'published-testimonials' }),
 ]);
 
+usePageTheme(cms);
+
 usePageSeo(() => ({
   title: cms.value?.eyebrow ?? 'Testimonials',
   description: cms.value?.description,
@@ -53,8 +55,8 @@ async function submitTestimonial() {
 </script>
 
 <template>
-  <BlockContainer class="py-10 lg:py-20">
-    <div class="mb-12 max-w-2xl space-y-4">
+  <BlockContainer class="py-8 lg:py-12">
+    <div class="mb-10 max-w-2xl space-y-4">
       <TypographyTitle as="p">{{ cms?.eyebrow }}</TypographyTitle>
       <TypographyHeadline as="h1" size="title" :content="cms?.headline ?? ''" />
       <p class="whitespace-pre-line text-lg leading-8 text-text/90">{{ cms?.description }}</p>
@@ -106,7 +108,7 @@ async function submitTestimonial() {
         </div>
       </section>
 
-      <aside class="rounded-[1.75rem] border border-primary/20 bg-primary/10 p-6 shadow-lg shadow-black/20 lg:sticky lg:top-24">
+      <aside class="rounded-3xl border border-primary/20 bg-primary/10 p-6 shadow-lg shadow-black/20 lg:sticky lg:top-24">
         <div class="space-y-2">
           <TypographyTitle as="p">{{ cms?.form_eyebrow }}</TypographyTitle>
           <TypographyHeadline as="h2" size="md" :content="cms?.form_headline ?? ''" />

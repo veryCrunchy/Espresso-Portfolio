@@ -1,6 +1,7 @@
 import type { File } from '../system';
+import type { DesignSettings } from './design';
 
-export interface Post {
+export interface Post extends DesignSettings {
   id: string;
   status?: 'published' | 'draft' | 'archived';
   slug: string;
@@ -27,6 +28,9 @@ export interface PostList {
   page: number;
   pageCount: number;
   tags: string[];
+  tagCounts: Record<string, number>;
+  /** Published posts across all tags. */
+  totalAll: number;
 }
 
 export interface PostDetail {

@@ -1,3 +1,5 @@
+import type { DesignSettings } from './design';
+
 export interface Testimonial {
   id: number | string;
   status?: 'draft' | 'published' | 'archived' | null;
@@ -19,7 +21,7 @@ export interface TestimonialSubmission {
   website?: string;
 }
 
-export interface TestimonialsPage {
+export interface TestimonialsPage extends DesignSettings {
   id: number;
   eyebrow: string;
   headline: string;

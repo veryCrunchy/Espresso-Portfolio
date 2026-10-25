@@ -1,7 +1,8 @@
 import type { Block, BlockType } from '../blocks';
 import type { File } from '../system';
+import type { DesignSettings } from './design';
 
-export interface Page {
+export interface Page extends DesignSettings {
     id?: string;
     slug: string;
     sort?: number | null;
@@ -9,11 +10,6 @@ export interface Page {
     title?: string | null;
     seo_description?: string | null;
     seo_image?: string | File | null;
-    color_text?: string | null;
-    color_background?: string | null;
-    color_primary?: string | null;
-    color_secondary?: string | null;
-    color_accent?: string | null;
     blocks?: PageBlock[];
 }
 

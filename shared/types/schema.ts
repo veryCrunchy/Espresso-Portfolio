@@ -1,4 +1,4 @@
-import type { BlockGallery, BlockHero, BlockLinks, BlockPosts, BlockRichtext, BlockYoutube } from './blocks';
+import type { BlockActivity, BlockGallery, BlockHero, BlockLinks, BlockPosts, BlockRichtext, BlockYoutube } from './blocks';
 import type { BlogPage, Link, LinksPage, Page, Post, SiteSettings, Testimonial, TestimonialsPage } from './content';
 import type { File } from './system';
 
@@ -18,5 +18,6 @@ export interface Schema {
     block_youtube: BlockYoutube[]
     block_posts: BlockPosts[]
     block_links: BlockLinks[]
+    block_activity: BlockActivity[]
     directus_files: File[]
 }

@@ -27,22 +27,7 @@ usePageSeo(() => ({
   image: page.value?.seo_image ?? (firstHero.value?.image as string | undefined),
 }));
 
-// Per-page color overrides — only inject a style tag when the page has overrides set
-useHead(() => {
-  const p = page.value;
-  const vars = {
-    text: p?.color_text,
-    background: p?.color_background,
-    primary: p?.color_primary,
-    secondary: p?.color_secondary,
-    accent: p?.color_accent,
-  };
-  const parts = Object.entries(vars)
-    .filter(([, value]) => value)
-    .map(([name, value]) => `--color-${name}: ${value};`);
-  if (!parts.length) return {};
-  return { style: [{ key: 'page-theme', innerHTML: `:root {\n  ${parts.join('\n  ')}\n}` }] };
-});
+usePageTheme(page);
 </script>
 
 <template>

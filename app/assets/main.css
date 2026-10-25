@@ -1,3 +1,14 @@
+/* Defaults with zero specificity, so the CMS design settings (injected as :root rules) always win. */
+:where(html) {
+  --text-scale: 1;
+  --heading-scale: 1;
+  --space-scale: 1;
+  --radius-scale: 1;
+  --font-body: Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-body);
+  --content-width: 72rem;
+}
+
 html {
   color-scheme: dark;
   scroll-behavior: smooth;
@@ -8,7 +19,8 @@ body {
   margin: 0;
   background-color: var(--color-background);
   color: var(--color-text);
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
+  font-size: calc(1rem * var(--text-scale, 1));
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }

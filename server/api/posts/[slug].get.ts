@@ -1,20 +1,35 @@
-import { readItems } from '@directus/sdk';
+import { readItem, readItems } from '@directus/sdk';
 import type { Post, PostDetail } from '#shared/types';
+
+const FIELDS = [...POST_SUMMARY_FIELDS, ...DESIGN_FIELDS, 'status', 'content', 'seo_title', 'seo_description'];
 
 export default defineCmsHandler(async (event): Promise<PostDetail> => {
   const slug = getRouterParam(event, 'slug');
+  const access = previewAccess(event);
   const directus = createServerDirectus();
 
   let post: (Post & { date_created?: string | null }) | undefined;
   try {
     const result = await directus.request(
       readItems('posts', {
-        filter: publishedFilter({ slug: { _eq: slug } }) as never,
+        // Previews with the secret may also see drafts and scheduled posts.
+        filter: (access.drafts
+          ? { slug: { _eq: slug }, status: { _neq: 'archived' } }
+          : publishedFilter({ slug: { _eq: slug } })) as never,
         limit: 1,
-        fields: [...POST_SUMMARY_FIELDS, 'content', 'seo_title', 'seo_description'] as never,
+        fields: FIELDS as never,
       }),
     );
     post = (result as Post[])[0];
+
+    // Unsaved edits live in a content version until they are promoted to main.
+    if (post && access.version) {
+      const main = post;
+      post = await directus
+        .request(readItem('posts', post.id, { version: access.version, fields: FIELDS as never }))
+        .then((versioned) => versioned as Post)
+        .catch(() => main);
+    }
   } catch (error) {
     if (!isMissingInCms(error)) toCmsError(error, 'Unable to load the post from Directus.');
   }

@@ -1,7 +1,7 @@
 import type { BlockGallery } from './block-gallery';
 import type { BlockHero } from './block-hero';
 import type { BlockRichtext } from './block-richtext';
-import type { BlockLinks, BlockPosts, BlockYoutube } from './block-integrations';
+import type { BlockActivity, BlockLinks, BlockPosts, BlockYoutube } from './block-integrations';
 
 export type BlockType =
     | 'block_hero'
@@ -10,6 +10,7 @@ export type BlockType =
     | 'block_youtube'
     | 'block_posts'
     | 'block_links'
+    | 'block_activity'
 
 export type Block =
     | BlockHero
@@ -18,3 +19,4 @@ export type Block =
     | BlockYoutube
     | BlockPosts
     | BlockLinks
+    | BlockActivity

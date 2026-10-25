@@ -1,0 +1,21 @@
+{
+  "fonts": [
+    { "name": "Inter", "kind": "Sans" },
+    { "name": "DM Sans", "kind": "Sans" },
+    { "name": "Space Grotesk", "kind": "Sans" },
+    { "name": "Outfit", "kind": "Sans" },
+    { "name": "Playfair Display", "kind": "Serif" },
+    { "name": "Fraunces", "kind": "Serif" },
+    { "name": "Lora", "kind": "Serif" },
+    { "name": "DM Serif Display", "kind": "Serif" },
+    { "name": "Bebas Neue", "kind": "Display" },
+    { "name": "JetBrains Mono", "kind": "Mono" },
+    { "name": "Caveat", "kind": "Handwriting" }
+  ],
+  "contentWidths": {
+    "narrow": "56rem",
+    "default": "72rem",
+    "wide": "88rem",
+    "full": "100%"
+  }
+}

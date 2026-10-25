@@ -58,7 +58,7 @@ onUpdated(() => decorate(el.value));
     class="prose w-full max-w-none text-text"
     :class="{
       'text-sm': size === 'sm',
-      'md:text-base lg:text-lg': size === 'md',
+      'text-base lg:text-lg': size === 'md',
       'text-lg sm:text-xl': size === 'lg',
     }"
     @click="onClick"
@@ -81,6 +81,10 @@ onUpdated(() => decorate(el.value));
   --un-prose-code: var(--color-text);
   --un-prose-borders: color-mix(in srgb, var(--color-primary) 40%, transparent);
   --un-prose-bg-soft: color-mix(in srgb, var(--color-primary) 15%, transparent);
+}
+
+.prose :where(h1, h2, h3, h4) {
+  font-family: var(--font-heading);
 }
 
 .prose img {
