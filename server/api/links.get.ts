@@ -1,25 +1,18 @@
-import { isDirectusError, readItems } from '@directus/sdk';
-import { createServerDirectus } from '../utils/directus';
+import { readItems } from '@directus/sdk';
+import type { Link } from '#shared/types';
 
-export default defineEventHandler(async () => {
+export default defineCmsHandler(async () => {
   const directus = createServerDirectus();
 
   try {
-    return await directus.request(
+    return (await directus.request(
       readItems('links', {
         filter: { status: { _eq: 'published' } },
         sort: ['sort'],
-        fields: ['id', 'title', 'url', 'open_new_tab', { image: ['id', 'filename_download'] } as any],
-      })
-    );
+        fields: ['id', 'title', 'url', 'open_new_tab', 'image', 'icon', 'description'],
+      }),
+    )) as Link[];
   } catch (error) {
-    if (isDirectusError(error)) {
-      throw createError({
-        statusCode: 500,
-        statusMessage: 'Unable to load links from Directus.',
-        data: error.errors,
-      });
-    }
-    throw error;
+    toCmsError(error, 'Unable to load links from Directus.');
   }
 });

@@ -1,101 +1,52 @@
-# Nuxt Minimal Starter
+# Espresso's Work
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Portfolio and blog for [espressos.work](https://espressos.work), built with Nuxt 4, UnoCSS and a [Directus](https://cms.espressos.work) CMS. Everything visible on the site — pages, blog posts, links, navigation, colors and SEO defaults — is edited in the CMS.
 
 ## Setup
 
-Make sure to install dependencies:
+Requires Node 22.22+ (or 24) and pnpm 10.
 
 ```bash
-# npm
-npm install
-
-# pnpm
 pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
+cp .env.example .env   # then fill in the values
 pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+| Variable | Purpose |
+| --- | --- |
+| `NUXT_PUBLIC_DIRECTUS_URL` | Directus base URL |
+| `NUXT_DIRECTUS_TOKEN` | Server-side Directus token (reads + testimonial submissions) |
+| `NUXT_PUBLIC_SITE_URL` | Public site URL for canonical links, sitemap and RSS (defaults to `https://espressos.work`) |
+| `NUXT_PREMID_SECRET` | Shared secret required by `POST /api/premid` |
 
-Build the application for production:
+Other scripts: `pnpm build`, `pnpm preview`, `pnpm typecheck`.
 
-```bash
-# npm
-npm run build
+## How it fits together
 
-# pnpm
-pnpm build
+- `app/` — the Nuxt app (pages, components, composables).
+- `server/` — API routes that talk to Directus. CMS responses are cached for 60 seconds (stale-while-revalidate); add `?preview=true` to any URL to bypass the cache. The Directus visual editor does this automatically.
+- `shared/types/` — types for the CMS schema, used by both sides.
+- `scripts/setup-directus.mjs` — creates the CMS collections and fields this site expects. It only adds what is missing and never deletes anything:
 
-# yarn
-yarn build
+  ```bash
+  NUXT_PUBLIC_DIRECTUS_URL=… NUXT_DIRECTUS_TOKEN=<admin token> node scripts/setup-directus.mjs --dry-run
+  ```
 
-# bun
-bun run build
-```
+## Editing content (CMS guide)
 
-Locally preview production build:
+- **Pages** are built from blocks: Hero, Rich text, Gallery, **YouTube** (latest uploads from a channel), **Latest posts** and **Social links**. Page-level colors and an SEO description/image can be set per page.
+- **Posts** power `/blog`. Set the status to *Published* to make a post live; a future *Published at* date schedules it. Tags, excerpt, cover image and SEO fields are optional. Pinned (*featured*) posts sort first.
+- **Blog page** holds the copy at the top of `/blog`.
+- **Links** appear on `/links`, in the footer and in the Social links block. Brand icons are detected from the URL; set *Icon* (e.g. `simple-icons:bluesky`) to override.
+- **Site settings** holds theme colors, the site name and description, the default link-preview image, the X/Twitter handle, the header menu and footer text.
+- **Testimonials** submitted on the site arrive as drafts for approval.
 
-```bash
-# npm
-npm run preview
+Uploaded images are served resized and in modern formats (AVIF/WebP) through Directus. Keep uploads in the `public` folder (the default for every image field) so visitors can see them.
 
-# pnpm
-pnpm preview
+## Feeds & SEO
 
-# yarn
-yarn preview
+`/rss.xml`, `/sitemap.xml` and `/robots.txt` are generated from the CMS. Every page gets a canonical URL, Open Graph and Twitter cards; blog posts also get article metadata and JSON-LD (`BlogPosting`, breadcrumbs).
 
-# bun
-bun run preview
-```
+## PreMID
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-
-## Directus Notes
-
-Set the following environment variables for local development:
-
-```bash
-NUXT_PUBLIC_DIRECTUS_URL=https://your-directus-instance.example
-NUXT_PUBLIC_SITE_URL=http://localhost:3000
-```
-
-If you don't want to allow public testimonial submissions from the Directus public role, add a server token:
-
-```bash
-NUXT_DIRECTUS_TOKEN=your-directus-static-token
-```
-
-The testimonial page expects a `testimonials` collection in Directus with these fields:
-
-```text
-name      string
-subject   string
-quote     text
-status    string
-```
-
-Published testimonials are displayed on the site. New submissions are created as `draft` so they stay subject to approval.
+`POST /api/premid` receives the PreMID activity webhook and shows it as a "now playing" pill in the header. Set `NUXT_PREMID_SECRET` and send it as `Authorization: Bearer <secret>` (or `?token=<secret>`).

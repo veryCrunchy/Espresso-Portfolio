@@ -1,27 +1,26 @@
 import {
   defineConfig,
-  transformerDirectives,
   presetTypography,
+  presetWind4,
+  transformerDirectives,
   transformerVariantGroup,
-  presetUno,
 } from "unocss";
 
 export default defineConfig({
   theme: {
-    fontFamily: {
-      inter: "Inter",
+    font: {
+      sans: "Inter, ui-sans-serif, system-ui, sans-serif",
     },
+    // Theme colors come from the CMS as CSS variables. presetWind4 applies
+    // opacity modifiers (bg-primary/10) via color-mix, so any CSS color works.
     colors: {
       text: "var(--color-text)",
       background: "var(--color-background)",
       primary: "var(--color-primary)",
       secondary: "var(--color-secondary)",
-      accent: "var(--color-secondary)",
-      success: "var(--color-success)",
-      warning: "var(--color-warning)",
-      danger: "var(--color-danger)",
+      accent: "var(--color-accent)",
     },
   },
-  presets: [presetUno(), presetTypography()],
+  presets: [presetWind4({ preflights: { reset: true } }), presetTypography()],
   transformers: [transformerDirectives(), transformerVariantGroup()],
 });

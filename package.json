@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "espresso-portfolio",
   "private": true,
   "type": "module",
   "scripts": {
@@ -7,27 +7,37 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "typecheck": "nuxt typecheck",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@directus/sdk": "^21.2.2",
-    "@directus/visual-editing": "^2.0.0",
-    "@headlessui/vue": "^1.7.23",
-    "@nuxt/fonts": "^0.10.2",
-    "@nuxt/image": "1.8.1",
-    "@nuxt/ui": "^2.19.2",
-    "@unocss/reset": "^0.64.1",
-    "motion": "^11.11.17",
-    "nuxt": "^3.14.1592",
-    "vue": "latest",
-    "vue-router": "latest"
+    "@directus/sdk": "^27.0.0",
+    "@directus/visual-editing": "^2.1.0",
+    "@nuxt/fonts": "^1.2.0",
+    "@nuxt/icon": "^2.6.1",
+    "@nuxt/image": "^2.2.0",
+    "nuxt": "^4.6.2",
+    "ufo": "^1.6.4",
+    "vue": "^3.5.44",
+    "vue-router": "^5.4.0"
   },
-  "packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387",
   "devDependencies": {
-    "@iconify-json/material-symbols": "^1.2.10",
-    "@nuxt/icon": "^1.9.3",
-    "@unocss/nuxt": "^0.64.1",
-    "@unocss/preset-typography": "^0.65.1",
-    "unocss": "^0.64.1"
+    "@iconify-json/material-symbols": "^1.2.96",
+    "@iconify-json/simple-icons": "^1.2.100",
+    "@unocss/nuxt": "^66.11.0",
+    "@unocss/preset-typography": "^66.11.0",
+    "typescript": "^5.9.3",
+    "unocss": "^66.11.0",
+    "vue-tsc": "^3.3.13"
+  },
+  "engines": {
+    "node": ">=22.22.3"
+  },
+  "packageManager": "pnpm@10.34.8",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "@parcel/watcher"
+    ]
   }
 }
